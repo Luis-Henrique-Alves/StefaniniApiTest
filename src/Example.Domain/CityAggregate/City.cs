@@ -4,43 +4,45 @@ namespace Example.Domain.CityAggregate
 {
     public class City
     {
-        private City(string name, string district)
+        private City(string name, string state)
         {
             this.Name = name;
-            this.District = district;
+            this.State = state;
         }
 
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public string District { get; set; }
+        public string State { get; set; }
         public virtual ICollection<Person> People { get; set; }
 
-        public static City Create(string name, string district)
+        public static City Create(string name, string state)
         {
-            //if (name == null)
-            //    throw new ArgumentException("Invalid " + nameof(name));
+            ValidateCityRequest(name, state);
 
-            //if (age == 0)
-            //    throw new ArgumentException("Invalid " + nameof(age));
-
-
-            return new City(name, district);
+            return new City(name, state);
         }
 
-
-        public void Update(string name, string district)
+        public void Update(string name, string state)
         {
-            //if (name != null)
-            //    Name = name;
+            ValidateCityRequest(name, state);
 
-            //if (age > 50)
-            //    throw new InvalidAgeExceptions();
-
-            //if (age != 0)
-            //    Age = age;
+            Name = name;
+            State = state;
         }
 
+        private static void ValidateCityRequest(string name, string state)
+        {
+            if (String.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            if (state.Length != 2)
+            {
+                throw new ArgumentException();
+            }
+        }
     }
 }

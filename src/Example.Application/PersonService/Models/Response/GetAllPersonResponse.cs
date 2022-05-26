@@ -5,6 +5,6 @@ namespace Example.Application.PersonService.Models.Response
 {
     public class GetAllPersonResponse : BaseResponse
     {
-        public List<PersonDto> Examples { get; set; }
+        public List<PersonDto> People { get; set; }
     }
 }

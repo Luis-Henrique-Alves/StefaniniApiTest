@@ -19,7 +19,7 @@ namespace Example.Infra.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(200)", nullable: false),
-                    District = table.Column<int>(type: "nvarchar(2)", nullable: false)
+                    State = table.Column<int>(type: "nvarchar(2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -44,7 +44,7 @@ namespace Example.Infra.Data.Migrations
      
         });
         migrationBuilder.AddForeignKey(
-           name: "FK_Projects_Users_UserId",
+           name: "FK_Person_City_CityId",
            table: "Person",
            column: "IdCity",
            principalTable: "City",

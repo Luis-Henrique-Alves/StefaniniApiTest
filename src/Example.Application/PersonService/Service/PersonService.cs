@@ -24,7 +24,7 @@ namespace Example.Application.ExampleService.Service
             var entity = await _db.Person.ToListAsync();
             return new GetAllPersonResponse()
             {
-                Examples = entity != null ? entity.Select(a => (PersonDto)a).ToList() : new List<PersonDto>()
+                People = entity != null ? entity.Select(a => (PersonDto)a).ToList() : new List<PersonDto>()
             };
         }
 
@@ -42,23 +42,20 @@ namespace Example.Application.ExampleService.Service
 
         public async Task<CreatePersonResponse> CreateAsync(CreatePersonRequest request)
         {
-            if (request == null)
-                throw new ArgumentException("Request empty!");
+            
+            var newPerson = Person.Create(request.Name, request.DocumentNumber, request.Age, request.IdCity);
+            ValidateAlredyExists(request);
 
-            var newExample = Person.Create(request.Name, request.DocumentNumber, request.Age, request.IdCity);
-
-            _db.Person.Add(newExample);
+            _db.Person.Add(newPerson);
 
             await _db.SaveChangesAsync();
 
-            return new CreatePersonResponse() { Id = newExample.Id };
+            return new CreatePersonResponse() { Id = newPerson.Id };
         }
 
         public async Task<UpdatePersonResponse> UpdateAsync(int id, UpdatePersonRequest request)
         {
-            if (request == null)
-                throw new ArgumentException("Request empty!");
-
+   
             var entity = await _db.Person.FirstOrDefaultAsync(item => item.Id == id);
 
             if (entity != null)
@@ -82,6 +79,15 @@ namespace Example.Application.ExampleService.Service
             }
 
             return new DeletePersonResponse();
+        }
+
+        private void ValidateAlredyExists(CreatePersonRequest request)
+        {
+
+            if (_db.Person.Any(x => x.DocumentNumber == request.DocumentNumber))
+            {
+                throw new ArgumentException("Request empty!");
+            }
         }
     }
 }

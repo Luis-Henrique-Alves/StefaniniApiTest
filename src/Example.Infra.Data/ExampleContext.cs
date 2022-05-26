@@ -38,7 +38,7 @@ namespace Example.Infra.Data
                 orderConfiguration.HasKey(o => o.Id);
                 orderConfiguration.Property(o => o.Id).UseIdentityColumn();
                 orderConfiguration.Property(o => o.Name).IsRequired();
-                orderConfiguration.Property(o => o.District).IsRequired();
+                orderConfiguration.Property(o => o.State).IsRequired();
                 orderConfiguration.HasMany(x => x.People)
                     .WithOne(X => X.City)
                     .OnDelete(DeleteBehavior.Cascade);

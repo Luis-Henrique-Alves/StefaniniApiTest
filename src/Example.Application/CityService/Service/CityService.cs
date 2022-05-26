@@ -41,10 +41,9 @@ namespace Example.Application.CityService.Service
 
         public async Task<CreateCityResponse> CreateAsync(CreateCityRequest request)
         {
-            if (request == null)
-                throw new ArgumentException("Request empty!");
+            var newCity = City.Create(request.Name, request.State);
 
-            var newCity = City.Create (request.Name, request.District);
+            ValidateAlredyExists(request);
 
             _db.City.Add(newCity);
 
@@ -62,7 +61,7 @@ namespace Example.Application.CityService.Service
 
             if (entity != null)
             {
-                entity.Update(request.Name, request.District);
+                entity.Update(request.Name, request.State);
                 await _db.SaveChangesAsync();
             }
 
@@ -81,6 +80,15 @@ namespace Example.Application.CityService.Service
             }
 
             return new DeleteCityResponse();
+        }
+
+        private void ValidateAlredyExists(CreateCityRequest request)
+        {
+     
+            if (_db.City.Any(x => x.State == request.State && request.Name == request.Name))
+            {
+                throw new ArgumentException("Request empty!");
+            }
         }
     }
 }

@@ -21,29 +21,76 @@ namespace Example.Domain.PersonAggregate
 
         public static Person Create(string name, string documentNumber, int age, int idCity)
         {
-            //if (name == null)
-            //    throw new ArgumentException("Invalid " + nameof(name));
-
-            //if (age == 0)
-            //    throw new ArgumentException("Invalid " + nameof(age));
-
-
+            ValidatePersonRequest(name, documentNumber, age, idCity);
             return new Person(name,documentNumber,age,idCity);
         }
 
 
         public void Update(string name, string documentNumber, int age, int idCity)
         {
-            //if (name != null)
-            //    Name = name;
-
-            //if (age > 50)
-            //    throw new InvalidAgeExceptions();
-
-            //if (age != 0)
-            //    Age = age;
+            ValidatePersonRequest(name, documentNumber, age, idCity);
+            Name = name;
+            DocumentNumber = documentNumber;
+            Age = age;
         }
 
+        private static void ValidatePersonRequest(string name, string documentNumber, int age, int idCity)
+        {
+            if (String.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
 
-    }
+            if (!IsCpf(documentNumber))
+            {
+                throw new ArgumentException();
+            }
+
+            if(age <=0 && age > 120)
+            {
+                throw new ArgumentException();
+            }
+
+            if(idCity <= 0)
+            {
+                throw new ArgumentException();
+            }
+        }
+    
+        private static bool IsCpf(string cpf)
+            {
+                int[] multiplicador1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+                int[] multiplicador2 = new int[10] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+                string tempCpf;
+                string digito;
+                int soma;
+                int resto;
+                cpf = cpf.Trim();
+                cpf = cpf.Replace(".", "").Replace("-", "");
+                if (cpf.Length != 11)
+                    return false;
+                tempCpf = cpf.Substring(0, 9);
+                soma = 0;
+
+                for (int i = 0; i < 9; i++)
+                    soma += int.Parse(tempCpf[i].ToString()) * multiplicador1[i];
+                resto = soma % 11;
+                if (resto < 2)
+                    resto = 0;
+                else
+                    resto = 11 - resto;
+                digito = resto.ToString();
+                tempCpf = tempCpf + digito;
+                soma = 0;
+                for (int i = 0; i < 10; i++)
+                    soma += int.Parse(tempCpf[i].ToString()) * multiplicador2[i];
+                resto = soma % 11;
+                if (resto < 2)
+                    resto = 0;
+                else
+                    resto = 11 - resto;
+                digito = digito + resto.ToString();
+                return cpf.EndsWith(digito);
+            }
+        }
 }
