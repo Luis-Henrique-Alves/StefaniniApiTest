@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Example.Domain.CityAggregate;
+using Example.Domain.PersonAggregate;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.Extensions.Configuration;
 
 namespace Example.Infra.Data
 {
@@ -12,7 +13,8 @@ namespace Example.Infra.Data
     /// </summary>
     public class ExampleContext : DbContext
     {
-        public DbSet<Domain.ExampleAggregate.Example> Example { get; set; }
+        public DbSet<City> City { get; set; }
+        public DbSet<Person> Person { get; set; }
         public ExampleContext(DbContextOptions options) : base(options)
         {
         }
@@ -20,22 +22,45 @@ namespace Example.Infra.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.ApplyConfiguration(new ExampleEntityTypeConfiguration());
-            modelBuilder.Entity<Domain.ExampleAggregate.Example>();
+            modelBuilder.ApplyConfiguration(new CityEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new PersonEntityTypeConfiguration());
+            modelBuilder.Entity<City>();
+            modelBuilder.Entity<Person>();
 
         }
-    }
 
-    public class ExampleEntityTypeConfiguration : IEntityTypeConfiguration<Domain.ExampleAggregate.Example>
-    {
-        public void Configure(EntityTypeBuilder<Domain.ExampleAggregate.Example> orderConfiguration)
+        public class CityEntityTypeConfiguration : IEntityTypeConfiguration<City>
         {
-            orderConfiguration.ToTable("Example", "dbo");
+            public void Configure(EntityTypeBuilder<City> orderConfiguration)
+            {
+                orderConfiguration.ToTable("City", "dbo");
 
-            orderConfiguration.HasKey(o => o.Id);
-            orderConfiguration.Property(o => o.Id).UseIdentityColumn();
-            orderConfiguration.Property(o => o.Name).IsRequired();
-            orderConfiguration.Property(o => o.Age).IsRequired();
+                orderConfiguration.HasKey(o => o.Id);
+                orderConfiguration.Property(o => o.Id).UseIdentityColumn();
+                orderConfiguration.Property(o => o.Name).IsRequired();
+                orderConfiguration.Property(o => o.District).IsRequired();
+                orderConfiguration.HasMany(x => x.People)
+                    .WithOne(X => X.City)
+                    .OnDelete(DeleteBehavior.Cascade);
+            }
+        }
+        public class PersonEntityTypeConfiguration : IEntityTypeConfiguration<Person>
+        {
+            public void Configure(EntityTypeBuilder<Person> orderConfiguration)
+            {
+                orderConfiguration.ToTable("Person", "dbo");
+
+                orderConfiguration.HasKey(o => o.Id);
+                orderConfiguration.Property(o => o.Id).UseIdentityColumn();
+                orderConfiguration.Property(o => o.Name).IsRequired();
+                orderConfiguration.Property(o => o.DocumentNumber).IsRequired();
+                orderConfiguration.Property(o => o.Age).IsRequired();
+                orderConfiguration
+                  .HasOne(x => x.City)
+                  .WithMany(y => y.People).HasForeignKey(x => x.IdCity);
+
+            }
         }
     }
+
 }

@@ -1,4 +1,6 @@
+using Example.Application.CityService.Service;
 using Example.Application.ExampleService.Service;
+using Example.Application.PersonService.Service;
 using Example.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +14,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IExampleService, ExampleService>();
+builder.Services.AddScoped<ICityService, CityService>();
+builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddDbContext<ExampleContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();

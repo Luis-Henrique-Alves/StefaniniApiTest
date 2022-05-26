@@ -1,17 +1,16 @@
-﻿using Example.Application.ExampleService.Models.Request;
-using Example.Application.ExampleService.Models.Response;
-using Example.Application.ExampleService.Service;
+﻿using Example.Application.CityService.Models.Request;
+using Example.Application.CityService.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Example.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ExampleController : BaseController
+    public class CityController : BaseController
     {
-        private readonly IExampleService _service;
+        private readonly ICityService _service;
 
-        public ExampleController(ILogger<ExampleController> logger, IExampleService service) : base()
+        public CityController(ILogger<CityController> logger, ICityService service) : base()
         {
             _service = service;
         }
@@ -49,7 +48,7 @@ namespace Example.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreateExampleRequest request)
+        public async Task<IActionResult> Post([FromBody] CreateCityRequest request)
         {
             try
             {
@@ -67,7 +66,7 @@ namespace Example.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] UpdateExampleRequest request)
+        public async Task<IActionResult> Put(int id, [FromBody] UpdateCityRequest request)
         {
             try
             {
