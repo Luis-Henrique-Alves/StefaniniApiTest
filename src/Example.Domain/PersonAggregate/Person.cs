@@ -1,4 +1,5 @@
 ﻿using Example.Domain.CityAggregate;
+using Example.Domain.PersonAggregate.PersonExceptionsMessages;
 
 namespace Example.Domain.PersonAggregate
 {
@@ -38,22 +39,22 @@ namespace Example.Domain.PersonAggregate
         {
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(PersonExceptionMessages.NameIsRequired);
             }
 
             if (!IsCpf(documentNumber))
             {
-                throw new ArgumentException();
+                throw new ArgumentException(PersonExceptionMessages.CPFIsInvalid);
             }
 
             if(age <=0 && age > 120)
             {
-                throw new ArgumentException();
+                throw new ArgumentException(PersonExceptionMessages.AgeIsInvalid);
             }
 
             if(idCity <= 0)
             {
-                throw new ArgumentException();
+                throw new ArgumentException(PersonExceptionMessages.IdCityIsInvalid);
             }
         }
     

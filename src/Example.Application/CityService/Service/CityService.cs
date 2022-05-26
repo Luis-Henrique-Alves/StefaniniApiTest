@@ -3,6 +3,7 @@ using Example.Application.CityService.Models.Request;
 using Example.Application.CityService.Models.Response;
 using Example.Application.Common;
 using Example.Domain.CityAggregate;
+using Example.Domain.CityAggregate.CityExceptions;
 using Example.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -55,7 +56,7 @@ namespace Example.Application.CityService.Service
         public async Task<UpdateCityResponse> UpdateAsync(int id, UpdateCityRequest request)
         {
             if (request == null)
-                throw new ArgumentException("Request empty!");
+                throw new ArgumentException(CityExceptionsMessages.RequestIsEmpty);
 
             var entity = await _db.City.FirstOrDefaultAsync(item => item.Id == id);
 
@@ -87,7 +88,7 @@ namespace Example.Application.CityService.Service
      
             if (_db.City.Any(x => x.State == request.State && request.Name == request.Name))
             {
-                throw new ArgumentException("Request empty!");
+                throw new ArgumentException(CityExceptionsMessages.CityAlreadyExists);
             }
         }
     }

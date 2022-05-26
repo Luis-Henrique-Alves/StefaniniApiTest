@@ -1,4 +1,5 @@
-﻿using Example.Domain.PersonAggregate;
+﻿using Example.Domain.CityAggregate.CityExceptions;
+using Example.Domain.PersonAggregate;
 
 namespace Example.Domain.CityAggregate
 {
@@ -36,12 +37,12 @@ namespace Example.Domain.CityAggregate
         {
             if (String.IsNullOrEmpty(name))
             {
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(CityExceptionsMessages.NameIsRequired);
             }
 
             if (state.Length != 2)
             {
-                throw new ArgumentException();
+                throw new ArgumentException(CityExceptionsMessages.StateIsInvalid);
             }
         }
     }
