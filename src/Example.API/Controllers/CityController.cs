@@ -1,5 +1,4 @@
-﻿using Example.API.Properties;
-using Example.Application.CityService.Models.Request;
+﻿using Example.Application.CityService.Models.Request;
 using Example.Application.CityService.Service;
 using Microsoft.AspNetCore.Mvc;
 
